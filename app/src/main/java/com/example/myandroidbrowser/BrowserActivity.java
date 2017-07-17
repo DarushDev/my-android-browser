@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -112,6 +114,70 @@ public class BrowserActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.browser, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        if (!webView.canGoBack()) {
+            menu.getItem(0).setEnabled(false);
+            menu.getItem(0).getIcon().setAlpha(130);
+        } else {
+            menu.getItem(0).setEnabled(true);
+            menu.getItem(0).getIcon().setAlpha(255);
+        }
+
+        if (!webView.canGoForward()) {
+            menu.getItem(1).setEnabled(false);
+            menu.getItem(1).getIcon().setAlpha(130);
+        } else {
+            menu.getItem(1).setEnabled(true);
+            menu.getItem(1).getIcon().setAlpha(255);
+        }
+
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+
+        if (item.getItemId() == R.id.action_back) {
+            back();
+        }
+
+        if (item.getItemId() == R.id.action_forward) {
+            forward();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void back() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+        }
+    }
+
+    private void forward() {
+        if (webView.canGoForward()) {
+            webView.goForward();
+        }
     }
 
     private class MyWebChromeClient extends WebChromeClient {
