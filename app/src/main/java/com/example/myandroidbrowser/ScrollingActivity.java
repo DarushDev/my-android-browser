@@ -8,6 +8,8 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -47,6 +49,22 @@ public class ScrollingActivity extends AppCompatActivity {
         initCollapsingToolbar();
         renderPost();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_scrolling, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_local_html) {
+            // Loading local html file into web view
+            webView.loadUrl("file:///android_asset/sample.html");
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initWebView() {
@@ -128,11 +146,8 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void renderPost() {
-        webView.loadUrl(postUrl);
         // Loading html over internet into web view
-        //webView.loadUrl(postUrl);
-        // Loading local html file into web view
-        //webView.loadUrl("file:///android_asset/sample.html");
+        webView.loadUrl(postUrl);
     }
 
     private void openInAppBrowser(String url) {
