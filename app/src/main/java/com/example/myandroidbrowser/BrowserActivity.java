@@ -28,12 +28,11 @@ public class BrowserActivity extends AppCompatActivity {
     private WebView webView;
     private ProgressBar progressBar;
     private float m_downX;
-    AppBarLayout app_bar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling);
+        setContentView(R.layout.activity_browser);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
@@ -45,21 +44,7 @@ public class BrowserActivity extends AppCompatActivity {
 
         webView = (WebView) findViewById(R.id.webView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        app_bar = (AppBarLayout) findViewById(R.id.app_bar);
-        app_bar.setVisibility(View.GONE);
 
-        Resources r = getResources();
-        int px = (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                70,
-                r.getDisplayMetrics()
-        );
-
-        if (webView.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) webView.getLayoutParams();
-            p.setMargins(0, px, 0, 0);
-            webView.requestLayout();
-        }
         initWebView();
         webView.loadUrl(url);
     }
