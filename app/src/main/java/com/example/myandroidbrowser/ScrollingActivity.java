@@ -42,7 +42,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl(postUrl);
+        // Loading html over internet into web view
+        //webView.loadUrl(postUrl);
+        // Loading local html file into web view
+        webView.loadUrl("file:///android_asset/sample.html");
         webView.setHorizontalScrollBarEnabled(false);
 
     }
