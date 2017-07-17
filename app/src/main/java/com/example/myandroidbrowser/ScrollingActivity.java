@@ -41,6 +41,13 @@ public class ScrollingActivity extends AppCompatActivity {
         initCollapsingToolbar();
 
         webView.getSettings().setJavaScriptEnabled(true);
+        /**
+         * Enabling zoom-in controls
+         * */
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(true);
+
         webView.setWebViewClient(new WebViewClient());
         // Loading html over internet into web view
         //webView.loadUrl(postUrl);

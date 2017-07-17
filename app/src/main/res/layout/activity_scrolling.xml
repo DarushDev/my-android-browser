@@ -53,6 +53,7 @@
     <include layout="@layout/content_scrolling" />
 
     <ProgressBar
+        android:visibility="gone"
         android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
