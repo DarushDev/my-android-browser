@@ -1,16 +1,19 @@
 package com.example.myandroidbrowser;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -18,24 +21,19 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-/**
- * Created by Lenovo Desktop on 7/17/2017.
- */
-
 public class BrowserActivity extends AppCompatActivity {
 
-    // private String TAG = BrowserActivity.class.getSimpleName();
+    public static final String TAG = "mytag";
     private String url;
     private WebView webView;
     private ProgressBar progressBar;
     private float m_downX;
+    AppBarLayout app_bar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_browser);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_scrolling);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
 
@@ -47,9 +45,22 @@ public class BrowserActivity extends AppCompatActivity {
 
         webView = (WebView) findViewById(R.id.webView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        app_bar = (AppBarLayout) findViewById(R.id.app_bar);
+        app_bar.setVisibility(View.GONE);
 
+        Resources r = getResources();
+        int px = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                70,
+                r.getDisplayMetrics()
+        );
+
+        if (webView.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) webView.getLayoutParams();
+            p.setMargins(0, px, 0, 0);
+            webView.requestLayout();
+        }
         initWebView();
-
         webView.loadUrl(url);
     }
 
@@ -128,14 +139,6 @@ public class BrowserActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
 
         if (!webView.canGoBack()) {
-            menu.getItem(0).setEnabled(false);
-            menu.getItem(0).getIcon().setAlpha(130);
-        } else {
-            menu.getItem(0).setEnabled(true);
-            menu.getItem(0).getIcon().setAlpha(255);
-        }
-
-        if (!webView.canGoForward()) {
             menu.getItem(1).setEnabled(false);
             menu.getItem(1).getIcon().setAlpha(130);
         } else {
@@ -143,6 +146,19 @@ public class BrowserActivity extends AppCompatActivity {
             menu.getItem(1).getIcon().setAlpha(255);
         }
 
+        if (!webView.canGoForward()) {
+            menu.getItem(2).setEnabled(false);
+            menu.getItem(2).getIcon().setAlpha(130);
+        } else {
+            menu.getItem(2).setEnabled(true);
+            menu.getItem(2).getIcon().setAlpha(255);
+        }
+
+        if (Utils.isBookmarked(BrowserActivity.this, url)) {
+            Utils.tintMenuIcon(BrowserActivity.this, menu.getItem(0), R.color.colorAccent);
+        } else {
+            Utils.tintMenuIcon(BrowserActivity.this, menu.getItem(0), android.R.color.white);
+        }
         return true;
     }
 
@@ -163,6 +179,15 @@ public class BrowserActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.action_forward) {
             forward();
+        }
+
+        if (item.getItemId() == R.id.action_bookmark) {
+            if (Utils.isBookmarked(BrowserActivity.this, url)) {
+                Utils.tintMenuIcon(BrowserActivity.this, item, android.R.color.white);
+            } else {
+                Utils.tintMenuIcon(BrowserActivity.this, item, R.color.colorAccent);
+            }
+            Utils.bookmarkUrl(this, url);
         }
 
         return super.onOptionsItemSelected(item);
